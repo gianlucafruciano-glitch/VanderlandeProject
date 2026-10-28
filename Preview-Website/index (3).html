@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vanderlande Issue Tracker</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="app">
+
+  <header id="app-header" class="app-header is-hidden">
+    <div class="app-header__brand">
+      <img src="6909c7c7743b4-Vanderlande.png" alt="Vanderlande" class="brand-logo">
+    </div>
+    <nav class="app-header__nav">
+      <button class="nav-btn" data-nav="dashboard">Dashboard</button>
+      <button class="nav-btn" data-nav="history">Historie</button>
+    </nav>
+    <div class="app-header__user">
+      <button id="reset-demo" class="btn btn-ghost btn-sm">Reset</button>
+      <button id="logout-btn" class="btn btn-ghost btn-sm">Log uit</button>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- LOGIN -->
+    <section class="screen" id="screen-login" data-screen="login">
+      <div class="card">
+        <div class="login-brand">
+          <img src="logo.png" alt="Vanderlande" class="login-brand__logo">
+        </div>
+        <h1 class="card__title">Login</h1>
+        <p class="card__subtitle">Meld aan met je account om verder te gaan.</p>
+
+        <form id="login-form" class="form" novalidate>
+          <div class="field">
+            <label for="login-email">E-mail</label>
+            <input id="login-email" name="email" type="email" autocomplete="email" placeholder="naam@bedrijf.nl">
+            <span class="field__error" data-error="email"></span>
+          </div>
+          <div class="field">
+            <label for="login-password">Wachtwoord</label>
+            <input id="login-password" name="password" type="password" autocomplete="current-password" placeholder="Wachtwoord">
+            <span class="field__error" data-error="password"></span>
+          </div>
+          <p class="form__error" id="login-error" role="alert"></p>
+          <button type="submit" class="btn btn-primary btn-block">Inloggen</button>
+        </form>
+
+        <div class="hint">
+          <strong>Demo accounts</strong>
+          <div>demo@demo.nl / demo123</div>
+          <div>admin@demo.nl / admin123</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2FA -->
+    <section class="screen" id="screen-twofa" data-screen="twofa">
+      <div class="card">
+        <h1 class="card__title">Tweestapsverificatie</h1>
+        <p class="card__subtitle">Voer de 6-cijferige code in die je hebt ontvangen.</p>
+
+        <form id="twofa-form" class="form" novalidate>
+          <div class="otp" id="otp-inputs">
+            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="Cijfer 1">
+            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Cijfer 2">
+            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Cijfer 3">
+            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Cijfer 4">
+            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Cijfer 5">
+            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Cijfer 6">
+          </div>
+
+          <p class="form__error" id="twofa-error" role="alert"></p>
+          <p class="form__meta">Poging <strong id="twofa-attempts">1</strong> van <strong>3</strong></p>
+
+          <button type="submit" class="btn btn-primary btn-block">Verifiëren</button>
+          <button type="button" class="btn btn-ghost btn-block" id="twofa-back">Terug naar login</button>
+        </form>
+
+        <div class="hint">
+          <strong>Demo code</strong>
+          <div>123456</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOCKED -->
+    <section class="screen" id="screen-blocked" data-screen="blocked">
+      <div class="card card--danger">
+        <h1 class="card__title">Apparaat geblokkeerd</h1>
+        <p class="card__subtitle">Er zijn te veel foute pogingen gedaan. Dit apparaat is geblokkeerd.</p>
+        <button type="button" class="btn btn-primary btn-block" id="blocked-unlock">Ontgrendel apparaat (demo)</button>
+      </div>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section class="screen" id="screen-dashboard" data-screen="dashboard">
+      <div class="screen__head">
+        <div>
+          <h1 class="screen__title">Issue index</h1>
+        </div>
+      </div>
+
+      <ul class="issue-list" id="issue-list"></ul>
+      <p class="empty is-hidden" id="issue-empty">Geen issues.</p>
+    </section>
+
+    <!-- DETAIL -->
+    <section class="screen" id="screen-detail" data-screen="detail">
+      <button class="back-link" data-nav="dashboard">Terug naar overzicht</button>
+
+      <div class="card">
+        <div class="detail__head">
+          <div>
+            <span class="issue-id" id="detail-id"></span>
+            <h1 class="card__title" id="detail-title"></h1>
+            <p class="card__subtitle" id="detail-description"></p>
+          </div>
+          <span class="badge" id="detail-badge"></span>
+        </div>
+
+        <div class="detail__meta">
+          <div class="meta-block">
+            <span class="meta-label">Categorie</span>
+            <select id="detail-category" class="input"></select>
+          </div>
+          <div class="meta-block">
+            <span class="meta-label">Geclaimd door</span>
+            <span class="meta-value" id="detail-claimed">-</span>
+          </div>
+          <div class="meta-block">
+            <span class="meta-label">Traject</span>
+            <span class="meta-value" id="detail-traject-name">-</span>
+          </div>
+          <div class="meta-block">
+            <span class="meta-label">Status blokje</span>
+            <span class="meta-value" id="detail-active">-</span>
+          </div>
+        </div>
+
+        <div class="traject">
+          <span class="meta-label">Blokjes in traject</span>
+          <div class="traject__list" id="detail-traject"></div>
+        </div>
+
+        <div class="detail__actions">
+          <button class="btn btn-primary" id="btn-start">Start</button>
+          <button class="btn" id="btn-stop">Stop</button>
+        </div>
+        <button class="btn btn-ghost btn-block" id="btn-reset">Reset blokje</button>
+
+        <div class="detail__actions" style="margin-top:16px;">
+          <button class="btn btn-primary" id="btn-claim">Claim</button>
+          <button class="btn" id="btn-fixed">Fixed</button>
+        </div>
+
+        <button class="btn btn-ghost btn-block" id="btn-closed">Afgesloten</button>
+      </div>
+
+      <div class="card">
+        <h2 class="card__section-title">Dichtbijzijnde blokjes uitzetten</h2>
+        <p class="card__subtitle" style="margin-bottom:12px;">
+          Zet blokjes rondom dit blok uit zodat je veilig kunt werken zonder het traject te verstoren.
+        </p>
+        <div class="field">
+          <label for="neighbor-count">Aantal aan weerszijden</label>
+          <select id="neighbor-count" class="input">
+            <option value="1">1 blokje</option>
+            <option value="2" selected>2 blokjes</option>
+            <option value="3">3 blokjes</option>
+            <option value="5">5 blokjes</option>
+          </select>
+        </div>
+        <button class="btn btn-primary btn-block" id="btn-exclude">Dichtbijzijnde uitzetten</button>
+      </div>
+
+      <div class="card">
+        <h2 class="card__section-title">Notities</h2>
+        <ul class="notes" id="detail-notes"></ul>
+        <p class="empty is-hidden" id="detail-notes-empty">Nog geen notities.</p>
+      </div>
+    </section>
+
+    <!-- COMMENT -->
+    <section class="screen" id="screen-comment" data-screen="comment">
+      <button class="back-link" id="comment-back">Terug</button>
+      <div class="card">
+        <h1 class="card__title">Opmerking fout</h1>
+        <p class="card__subtitle" id="comment-issue"></p>
+        <form id="comment-form" class="form" novalidate>
+          <div class="field">
+            <label for="comment-text">Opmerking</label>
+            <textarea id="comment-text" rows="5" placeholder="Beschrijf wat je hebt gedaan..."></textarea>
+          </div>
+          <p class="form__error" id="comment-error" role="alert"></p>
+          <button type="submit" class="btn btn-primary btn-block">Versturen</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- HISTORY -->
+    <section class="screen" id="screen-history" data-screen="history">
+      <div class="screen__head">
+        <div>
+          <h1 class="screen__title">Issue historie</h1>
+        </div>
+      </div>
+      <ul class="history-list" id="history-list"></ul>
+      <p class="empty is-hidden" id="history-empty">Geen historie.</p>
+    </section>
+
+  </main>
+
+  <nav id="app-bottom-bar" class="app-bottom-bar is-hidden">
+    <button class="nav-btn bottom-bar__item" id="scan-qr-btn" type="button">
+      <svg class="bottom-bar__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="3" y="3" width="7" height="7"></rect>
+        <rect x="14" y="3" width="7" height="7"></rect>
+        <rect x="3" y="14" width="7" height="7"></rect>
+        <path d="M14 14h3v3h-3z"></path>
+        <path d="M18 18h3v3h-3z"></path>
+      </svg>
+      <span>Scan QR</span>
+    </button>
+  </nav>
+
+  <!-- QR MODAL -->
+  <div id="qr-modal" class="modal is-hidden" aria-hidden="true">
+    <div class="modal__backdrop" id="qr-backdrop"></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="qr-title">
+      <header class="modal__header">
+        <h2 class="modal__title" id="qr-title">Scan QR</h2>
+        <button type="button" class="modal__close" id="qr-close">Sluiten</button>
+      </header>
+      <div class="modal__body">
+        <div id="qr-reader" class="qr-reader"></div>
+        <p class="qr-hint">Richt de camera op een QR-code.</p>
+        <p class="qr-error is-hidden" id="qr-error"></p>
+        <div class="qr-result is-hidden" id="qr-result">
+          <span class="qr-result__label">Resultaat</span>
+          <span class="qr-result__value" id="qr-result-value"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</div>
+
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="store.js"></script>
+<script src="router.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

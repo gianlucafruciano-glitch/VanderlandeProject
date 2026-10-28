@@ -1,0 +1,66 @@
+body {
+    background-color: #f4f5f7;
+}
+
+.navigation {
+    background-color: white;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 80px;
+    width: 100%;
+    border: 2px solid #e4e3e3;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+}
+
+#logoVanderlande {
+    flex: 0 0 auto;
+    margin-left: 20px;
+    height: 80px;
+    width: 200px;
+    background-image: url(VanderlandeLogo.webp);
+    background-repeat: no-repeat;
+    background-size: 215px;
+    background-position: center;
+}
+
+.navBtns {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    margin-left: 0;
+    gap: 0;
+}
+
+.navButton {
+    color: rgb(50, 50, 50);
+    text-decoration: none;
+    margin-left: 50px;
+    padding: 10px;
+    background: none;
+    border: none;
+    box-shadow: none;
+    cursor: pointer;
+    font-family: "Share Tech", sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.navButton:hover {
+    background-color: rgb(236, 236, 236);
+    border-radius: 10px;
+}
+
+#logoutBtn {
+    margin-left: 850px;
+}
+
+.main {
+    font-family: "Share Tech", sans-serif;
+    margin-top: 90px;
+    padding: 0 20px;
+}
